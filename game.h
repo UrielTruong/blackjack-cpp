@@ -17,10 +17,11 @@ using namespace std;
 class Game
 {
 public:
-    Deck deck;
+    Deck gameDeck;
     Computer computer;
     Bookmarker bookmarker;
     string path = "GameScore.txt";
+    string pathSaveGame = "PreviousGame.txt";
 
     void printResult(string label)
     {
@@ -61,12 +62,28 @@ public:
         //"0\n1"
     }
 
+    void saveGame()
+    {
+        FileAction fileAction(this->pathSaveGame);
+
+        // save Hand of BM and COM
+        fileAction.writeVector(this->bookmarker.hand);
+        fileAction.writeVector(this->computer.hand, true);
+
+        // save current Deck
+        fileAction.writeVector(this->gameDeck.listCard, true);
+    }
+
+    void loadGame()
+    {
+    }
+
     void dealtCard()
     {
         for (int i = 0; i < 2; i++)
         {
-            computer.receiveCard(deck.takeCard());   // receive card and
-            bookmarker.receiveCard(deck.takeCard()); // receive card and
+            computer.receiveCard(this->gameDeck.takeCard());   // receive card and
+            bookmarker.receiveCard(this->gameDeck.takeCard()); // receive card and
         }
     }
 
@@ -144,7 +161,7 @@ public:
             return this->printResult("DRAW");
         }
     }
-    void bookmarkerTurn()
+    int bookmarkerTurn()
     {
         this->bookmarker.showHand(); // print show hand
         int choice;
@@ -157,18 +174,20 @@ public:
             if (bmValue > 21)
             {
                 this->checkWin();
-                return;
+                return 0;
             }
             if (bmValue < 16)
             {
                 cout << "===HIT or STAND===" << endl;
                 cout << "1. HIT" << endl;
+                cout << "3. QUIT AND SAVE" << endl;
             }
             if (bmValue >= 16 && bmValue <= 21)
             {
                 cout << "===HIT or STAND===" << endl;
                 cout << "1. HIT" << endl;
                 cout << "2. STAND" << endl;
+                cout << "3. QUIT AND SAVE" << endl;
             }
 
             cin >> choice;
@@ -178,7 +197,7 @@ public:
             switch (choice)
             {
             case 1:
-                this->bookmarker.receiveCard(this->deck.takeCard());
+                this->bookmarker.receiveCard(this->gameDeck.takeCard());
                 cout << "Your current hand is: " << endl;
                 this->bookmarker.showHand();
                 break;
@@ -189,11 +208,20 @@ public:
                 }
                 flag = false;
                 break;
+            case 3:
+                // todo1: save hand and deck
+                this->saveGame();
+                // todo2: print thank you
+                cout << "Save game successfully!" << endl;
+                return 0;
+                break;
+
             default:
                 cout << "Invalid choice!";
                 break;
             }
         }
+        return 1;
     }
 
     void showMenu()
@@ -214,6 +242,7 @@ public:
             this->playGame();
             break;
         case 2:
+            this->saveGame();
             cout << "Thank you!";
             break;
         default:
@@ -225,8 +254,8 @@ public:
     {
         system("clear");
         // todo: shuffle / dealt card
-        this->deck.loadDeck();
-        this->deck.shuffle();
+        this->gameDeck.loadDeck();
+        this->gameDeck.shuffle();
         this->dealtCard();
 
         // todo: check pre-win
@@ -237,15 +266,18 @@ public:
         bool flag = this->computer.decisionHitOrStand();
         while (flag == DECISION_HIT)
         {
-            this->computer.receiveCard(this->deck.takeCard());
+            this->computer.receiveCard(this->gameDeck.takeCard());
             flag = this->computer.decisionHitOrStand();
         }
 
         // todo: Bookmarker turn
-        this->bookmarkerTurn();
+        int bookmarkerTurnResult = this->bookmarkerTurn();
 
         // todo: check result
-        this->checkWin();
+        if (bookmarkerTurnResult)
+        {
+            this->checkWin();
+        }
     }
 };
 

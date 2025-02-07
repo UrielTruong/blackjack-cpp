@@ -1,6 +1,7 @@
 #include <string>
 #include "game.h"
 #include <iostream>
+#include <vector>
 #include "read-file.h"
 
 using namespace std;

@@ -13,7 +13,7 @@ using namespace std;
 class Deck
 {
 public:
-    vector<Card> deck;
+    vector<Card> listCard;
 
     // method
     void loadDeck()
@@ -29,14 +29,14 @@ public:
             for (int j = 2; j < 11; j++)
             {
                 Card temp(j, to_string(j), suits[i]);
-                this->deck.push_back(temp);
+                this->listCard.push_back(temp);
             }
 
             // nhét JQKA -> value = 10
             for (int j = 0; j < 4; j++)
             {
                 Card temp(10, courtCard[j], suits[i]);
-                this->deck.push_back(Card(temp));
+                this->listCard.push_back(Card(temp));
             }
         }
     }
@@ -46,21 +46,21 @@ public:
         random_device rd;
         mt19937 gen(rd());
 
-        std::shuffle(deck.begin(), deck.end(), gen);
+        std::shuffle(this->listCard.begin(), this->listCard.end(), gen);
     }
 
     void printDeck()
     {
-        for (int i = 0; i < this->deck.size(); i++)
+        for (int i = 0; i < this->listCard.size(); i++)
         {
-            cout << i << ". " << this->deck[i].toString() << endl;
+            cout << i << ". " << this->listCard[i].toString() << endl;
         }
     }
     // lấy lá bài cuối - remove khỏi deck
     Card takeCard()
     {
-        Card temp = this->deck.back();
-        this->deck.pop_back();
+        Card temp = this->listCard.back();
+        this->listCard.pop_back();
 
         return temp;
     }

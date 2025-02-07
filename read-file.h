@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ public: // methods
         return fileResult;
     }
 
-    void write(string save)
+    void write(string save) // assign (truyền) a param "save" into a function to save a file
     {
         // todo: connect path (create / open file) ofstream
         ofstream write(path);
@@ -58,6 +59,35 @@ public: // methods
         ofstream write(path, ios::app);
 
         write << newSave;
+        write.close();
+    }
+
+    void writeVector(vector<Card> arrayString, bool isAppend = false)
+    {
+        // vector {"1. K Heart", "2. 3 Heart"}
+        // loop a vector
+        // save each element into file
+        if (isAppend)
+        {
+            ofstream write(path, ios::app);
+
+            for (int i = 0; i < arrayString.size(); i++)
+            {
+                write << arrayString[i].toString() << "\n";
+            }
+
+            write.close();
+
+            return;
+        }
+
+        ofstream write(path);
+
+        for (int i = 0; i < arrayString.size(); i++)
+        {
+            write << arrayString[i].toString() << "\n";
+        }
+
         write.close();
     }
 };

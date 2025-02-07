@@ -45,8 +45,17 @@ class GAME:
 + play -> Deck.shuffle(), checkPreWin(), com.logicHitOrStand(), xử lí rút bài, 
 
 
+
 Blackjack
 1. Add new feature to allow player see the score versus computer //done
 2. Show it at the beginning when open game or each time a match end. // done
 3. User also have 1 more option “Load game” under “Play game” to load an unfinished match (if have) and continue it with the score
+    - Add option into decisionHitOrStand => "Save and Quit game" // 
+    - when choose => 1. Save hand BM and Com into a file 
+                    2. Save current deck
+                    3. End game => print Thanks
+
+    - check having the Saving record => If YES SHOW into menu => "4. Continue game" // IF NO = keep as current
+        when choose => load the Hand, Deck => call decisionHitOrStand to continue a game
+
 4. If User choose “Play game” then reset score and unfinished match. Then start like normal
